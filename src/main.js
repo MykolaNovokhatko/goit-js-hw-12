@@ -34,12 +34,13 @@ form.addEventListener('submit', async event => {
   try {
     const hits = await fetchUsers(input.value);
     maxPage = Math.ceil(hits.totalHits / pageSize);
-    console.log(maxPage);
     renderUsers(hits.hits, userList, loader, btnLoadMore);
+    checkBtnStatus();
   } catch (error) {
     console.log(error);
   }
 });
+
 btnLoadMore.addEventListener('click', async event => {
   event.preventDefault();
   loader.classList.add('footer-loader');
@@ -48,16 +49,17 @@ btnLoadMore.addEventListener('click', async event => {
   try {
     const hits = await fetchUsers(input.value, currentPage);
     renderUsers(hits.hits, userList, loader, btnLoadMore);
+    window.scrollBy({
+      top: getParam() * 2,
+      left: 0,
+      behavior: 'smooth',
+    });
+    checkBtnStatus();
   } catch (error) {
     console.log(error);
   }
-  window.scrollBy({
-    top: getParam() * 2,
-    left: 0,
-    behavior: 'smooth',
-  });
-  checkBtnStatus();
 });
+
 function checkBtnStatus() {
   if (currentPage >= maxPage) {
     btnLoadMore.classList.add('is-hidden');
@@ -67,6 +69,8 @@ function checkBtnStatus() {
       backgroundColor: '#ef4040',
       position: 'topRight',
     });
+  } else {
+    btnLoadMore.classList.remove('is-hidden');
   }
   loader.classList.add('is-hidden');
 }

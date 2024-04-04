@@ -12,8 +12,9 @@ export async function fetchUsers(value, currentPage) {
   const url = `https://pixabay.com/api/?${searchParams}`;
   try {
     const response = await axios.get(url);
+    console.log(response.data);
     return response.data;
-  } catch {
+  } catch (error) {
     console.log(error);
   }
 }
